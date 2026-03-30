@@ -60,6 +60,8 @@ def print_stats(stats: Dict[str, Dict[str, int]]):
 
     total_lines = sum(s['total'] for s in stats.values())
     total_code = sum(s['code'] for s in stats.values())
+    total_blank = sum(s['blank'] for s in stats.values())
+    total_comments = sum(s['comments'] for s in stats.values())
 
     print("\n" + "=" * 80)
     print(f"{'File':<50} {'Lines':<10} {'Code':<10} {'Blank':<10} {'Comments':<10}")
@@ -70,7 +72,7 @@ def print_stats(stats: Dict[str, Dict[str, int]]):
         print(f"{filename:<50} {stat['total']:<10} {stat['code']:<10} {stat['blank']:<10} {stat['comments']:<10}")
 
     print("=" * 80)
-    print(f"{'TOTAL':<50} {total_lines:<10} {total_code:<10}")
+    print(f"{'TOTAL':<50} {total_lines:<10} {total_code:<10} {total_blank:<10} {total_comments:<10}")
     print("=" * 80 + "\n")
 
 
