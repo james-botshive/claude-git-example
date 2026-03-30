@@ -16,7 +16,8 @@ from calculator import (
     divide,
     power,
     square_root,
-    percentage
+    percentage,
+    exponentiate
 )
 
 
@@ -295,6 +296,70 @@ class TestNewValidations(unittest.TestCase):
             self.assertIn("Cannot calculate square root of negative number", str(e))
 
 
+class TestExponentiate(unittest.TestCase):
+    """Test cases for the exponentiate function (fast exponentiation)."""
+
+    def test_exponentiate_positive_powers(self):
+        """Test exponentiation with positive exponents."""
+        self.assertEqual(exponentiate(2, 10), 1024)
+        self.assertEqual(exponentiate(3, 5), 243)
+        self.assertEqual(exponentiate(5, 3), 125)
+        self.assertEqual(exponentiate(10, 0), 1)
+        self.assertEqual(exponentiate(7, 1), 7)
+
+    def test_exponentiate_negative_exponents(self):
+        """Test exponentiation with negative exponents."""
+        self.assertAlmostEqual(exponentiate(2, -2), 0.25)
+        self.assertAlmostEqual(exponentiate(10, -1), 0.1)
+        self.assertAlmostEqual(exponentiate(5, -3), 0.008)
+
+    def test_exponentiate_float_base(self):
+        """Test exponentiation with float base."""
+        self.assertAlmostEqual(exponentiate(2.5, 2), 6.25)
+        self.assertAlmostEqual(exponentiate(1.5, 3), 3.375)
+
+    def test_exponentiate_large_exponents(self):
+        """Test exponentiation with large exponents (within bounds)."""
+        result = exponentiate(2, 20)
+        self.assertEqual(result, 1048576)
+        result = exponentiate(3, 10)
+        self.assertEqual(result, 59049)
+
+    def test_exponentiate_zero_base(self):
+        """Test exponentiation with zero base."""
+        self.assertEqual(exponentiate(0, 5), 0)
+        self.assertEqual(exponentiate(0, 0), 1)  # 0^0 = 1 conventionally
+
+    def test_exponentiate_negative_base(self):
+        """Test exponentiation with negative base."""
+        self.assertEqual(exponentiate(-2, 3), -8)
+        self.assertEqual(exponentiate(-2, 4), 16)
+        self.assertEqual(exponentiate(-3, 2), 9)
+
+    def test_exponentiate_invalid_exponent_type(self):
+        """Test that non-integer exponents raise TypeError."""
+        with self.assertRaises(TypeError):
+            exponentiate(2, 2.5)
+        with self.assertRaises(TypeError):
+            exponentiate(3, "5")
+
+    def test_exponentiate_too_large_exponent(self):
+        """Test that too large exponents raise ValueError."""
+        with self.assertRaises(ValueError):
+            exponentiate(2, 10001)
+        with self.assertRaises(ValueError):
+            exponentiate(2, -10001)
+
+    def test_exponentiate_performance(self):
+        """Test that fast exponentiation is efficient."""
+        # This should be very fast with O(log n) algorithm
+        import time
+        start = time.time()
+        result = exponentiate(2, 1000)
+        elapsed = time.time() - start
+        self.assertLess(elapsed, 0.001)  # Should complete in less than 1ms
+
+
 def run_tests():
     """Run all tests and display results."""
     # Create a test suite
@@ -312,6 +377,7 @@ def run_tests():
     suite.addTests(loader.loadTestsFromTestCase(TestEdgeCases))
     suite.addTests(loader.loadTestsFromTestCase(TestInputValidation))
     suite.addTests(loader.loadTestsFromTestCase(TestNewValidations))
+    suite.addTests(loader.loadTestsFromTestCase(TestExponentiate))
 
     # Run the tests
     runner = unittest.TextTestRunner(verbosity=2)

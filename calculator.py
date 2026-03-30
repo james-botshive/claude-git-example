@@ -14,6 +14,9 @@ from typing import Union
 # Define number types for type hints
 Number = Union[int, float]
 
+# Constants for exponentiate function
+_MAX_EXPONENT = 10000
+
 
 def _validate_number(value, param_name: str = "value") -> None:
     """
@@ -218,6 +221,74 @@ def percentage(part: Number, whole: Number) -> float:
     return (part / whole) * 100
 
 
+def exponentiate(base: Number, exp: int) -> Number:
+    """
+    Calculate base raised to the power of exp using fast exponentiation (exponentiation by squaring).
+
+    This function uses an iterative O(log n) algorithm with bitwise operations for efficiency.
+    For non-integer exponents, use the power() function instead.
+
+    Args:
+        base: The base number (int or float)
+        exp: The exponent (must be an integer)
+
+    Returns:
+        base raised to the power of exp. Returns int for non-negative exponents with
+        int base. Returns float for negative exponents, float base, or large results.
+
+    Raises:
+        TypeError: If base is not numeric or exp is not an integer
+        ValueError: If exp is too large (potential DoS, must be between -10000 and 10000)
+
+    Examples:
+        >>> exponentiate(2, 10)
+        1024
+        >>> exponentiate(3, 0)
+        1
+        >>> exponentiate(5, 3)
+        125
+        >>> exponentiate(2, -2)
+        0.25
+        >>> exponentiate(-2, 3)
+        -8
+        >>> exponentiate(-2, 4)
+        16
+    """
+    _validate_number(base, "base")
+
+    if not isinstance(exp, int):
+        raise TypeError(f"exp must be an integer, got {type(exp).__name__}")
+
+    # Prevent potential DoS from extremely large exponents
+    if abs(exp) > _MAX_EXPONENT:
+        raise ValueError(
+            f"Exponent too large (must be between -{_MAX_EXPONENT} and {_MAX_EXPONENT}), got {exp}"
+        )
+
+    # Handle zero exponent
+    if exp == 0:
+        return 1 if isinstance(base, int) else 1.0
+
+    # Handle negative exponent
+    if exp < 0:
+        return 1 / exponentiate(base, -exp)
+
+    # Fast exponentiation by squaring using bitwise operations
+    result = 1
+    current_base = base
+    current_exp = exp
+
+    while current_exp > 0:
+        # If current bit is set (LSB is 1), multiply result by current base
+        if current_exp & 1:
+            result *= current_base
+        # Square the base and shift bits right (divide by 2)
+        current_base *= current_base
+        current_exp >>= 1
+
+    return result
+
+
 # Export all functions
 __all__ = [
     'add',
@@ -227,4 +298,5 @@ __all__ = [
     'power',
     'square_root',
     'percentage',
+    'exponentiate',
 ]
