@@ -4,9 +4,10 @@ A collection of Python utilities demonstrating Claude Code integration with Git 
 
 ## Overview
 
-This project provides multiple command-line tools for various tasks:
+This project provides multiple tools for various tasks:
 1. **Code Analysis** - Analyze Python files and directories for code metrics
 2. **Pi Calculator** - Calculate Pi using multiple mathematical algorithms
+3. **Calculator Module** - A simple calculator with arithmetic operations and comprehensive tests
 
 ## Tools
 
@@ -95,6 +96,44 @@ python calculate_pi.py --bbp --digits 20
 python calculate_pi.py --help
 ```
 
+### 3. Calculator Module (`calculator.py`)
+
+A simple calculator module providing fundamental arithmetic operations:
+
+**Available Functions:**
+- `add(a, b)` - Add two numbers
+- `subtract(a, b)` - Subtract second number from first
+- `multiply(a, b)` - Multiply two numbers
+- `divide(a, b)` - Divide first number by second (raises error for division by zero)
+- `power(base, exponent)` - Raise base to the power of exponent
+- `square_root(n)` - Calculate square root of a number
+- `percentage(part, whole)` - Calculate percentage of part relative to whole
+
+**Usage in Python:**
+```python
+from calculator import add, subtract, multiply, divide
+
+result = add(5, 3)  # Returns 8
+result = multiply(4, 7)  # Returns 28
+result = divide(10, 2)  # Returns 5.0
+```
+
+**Running Tests:**
+```bash
+# Run all calculator tests
+python test_calculator.py
+
+# Or use unittest module
+python -m unittest test_calculator.py
+```
+
+**Test Coverage:**
+The test suite includes 27 comprehensive tests covering:
+- All arithmetic operations with positive/negative integers and floats
+- Edge cases (zero, very large/small numbers)
+- Error handling (division by zero, square root of negative)
+- Special cases (fractional exponents, mixed types)
+
 ## Example Output
 
 ### Code Analysis Tool:
@@ -122,13 +161,17 @@ math.pi (standard)        3.141592653589793    0.00e+00
 
 - `hello.py` - Code analysis utility for Python files
 - `calculate_pi.py` - Pi calculator with multiple algorithms
+- `calculator.py` - Simple calculator module with arithmetic operations
+- `test_calculator.py` - Comprehensive unit tests for calculator module
 - `.gitignore` - Git ignore configuration for Python projects
 - `README.md` - This file
 
 ## Purpose
 
-This project serves two purposes:
+This project serves multiple purposes:
 1. **Practical Utilities**: Functional tools for Python development including:
    - Code analysis and metrics
    - Mathematical calculations and algorithm demonstrations
-2. **Educational Example**: Demonstrates Claude Code integration with Git workflows and best practices
+   - Basic arithmetic operations
+2. **Testing Examples**: Demonstrates Python testing best practices with comprehensive unit tests
+3. **Educational Example**: Demonstrates Claude Code integration with Git workflows and best practices
