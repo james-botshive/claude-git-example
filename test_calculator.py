@@ -209,6 +209,92 @@ class TestEdgeCases(unittest.TestCase):
         self.assertEqual(power(5, 0), 1)
 
 
+class TestInputValidation(unittest.TestCase):
+    """Test cases for input type validation."""
+
+    def test_add_with_string(self):
+        """Test that add raises TypeError for string input."""
+        with self.assertRaises(TypeError):
+            add("5", 3)
+        with self.assertRaises(TypeError):
+            add(5, "3")
+
+    def test_subtract_with_string(self):
+        """Test that subtract raises TypeError for string input."""
+        with self.assertRaises(TypeError):
+            subtract("10", 3)
+        with self.assertRaises(TypeError):
+            subtract(10, "3")
+
+    def test_multiply_with_list(self):
+        """Test that multiply raises TypeError for list input."""
+        with self.assertRaises(TypeError):
+            multiply([5], 3)
+        with self.assertRaises(TypeError):
+            multiply(5, [3])
+
+    def test_divide_with_dict(self):
+        """Test that divide raises TypeError for dict input."""
+        with self.assertRaises(TypeError):
+            divide({"a": 10}, 2)
+        with self.assertRaises(TypeError):
+            divide(10, {"b": 2})
+
+    def test_power_with_none(self):
+        """Test that power raises TypeError for None input."""
+        with self.assertRaises(TypeError):
+            power(None, 2)
+        with self.assertRaises(TypeError):
+            power(2, None)
+
+    def test_square_root_with_string(self):
+        """Test that square_root raises TypeError for string input."""
+        with self.assertRaises(TypeError):
+            square_root("16")
+
+    def test_percentage_with_tuple(self):
+        """Test that percentage raises TypeError for tuple input."""
+        with self.assertRaises(TypeError):
+            percentage((25,), 100)
+        with self.assertRaises(TypeError):
+            percentage(25, (100,))
+
+
+class TestNewValidations(unittest.TestCase):
+    """Test cases for new validation features."""
+
+    def test_power_large_exponent_positive(self):
+        """Test that power raises ValueError for very large positive exponents."""
+        with self.assertRaises(ValueError):
+            power(2, 1001)
+
+    def test_power_large_exponent_negative(self):
+        """Test that power raises ValueError for very large negative exponents."""
+        with self.assertRaises(ValueError):
+            power(2, -1001)
+
+    def test_power_boundary_value(self):
+        """Test that power works at the boundary (1000)."""
+        result = power(2, 1000)
+        self.assertIsInstance(result, float)
+
+    def test_divide_custom_error_message(self):
+        """Test that divide provides clear error message."""
+        try:
+            divide(10, 0)
+            self.fail("Should have raised ZeroDivisionError")
+        except ZeroDivisionError as e:
+            self.assertIn("Cannot divide by zero", str(e))
+
+    def test_square_root_custom_error_message(self):
+        """Test that square_root provides clear error message."""
+        try:
+            square_root(-4)
+            self.fail("Should have raised ValueError")
+        except ValueError as e:
+            self.assertIn("Cannot calculate square root of negative number", str(e))
+
+
 def run_tests():
     """Run all tests and display results."""
     # Create a test suite
@@ -224,6 +310,8 @@ def run_tests():
     suite.addTests(loader.loadTestsFromTestCase(TestSquareRoot))
     suite.addTests(loader.loadTestsFromTestCase(TestPercentage))
     suite.addTests(loader.loadTestsFromTestCase(TestEdgeCases))
+    suite.addTests(loader.loadTestsFromTestCase(TestInputValidation))
+    suite.addTests(loader.loadTestsFromTestCase(TestNewValidations))
 
     # Run the tests
     runner = unittest.TextTestRunner(verbosity=2)
